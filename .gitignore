@@ -5,3 +5,10 @@ _output/
 .moonagent/
 node_modules/
 *.wasm
+
+# npm build artifacts
+npm/iconset.js
+npm/iconset.js.map
+npm/iconset.gen.d.ts
+npm/moonbit.d.ts
+npm/iconset.wasm

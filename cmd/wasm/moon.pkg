@@ -3,8 +3,50 @@ import {
   "trkbt10/iconset/manifest",
   "trkbt10/iconset/ico",
   "trkbt10/iconset/icns",
+  "trkbt10/iconset/catalog",
+  "moonbitlang/core/json",
 }
 
 options(
   "is-main": true,
+  link: {
+    "js": {
+      "exports": [
+        "encode_ico_single:encodeIcoSingle",
+        "encode_icns_single:encodeIcnsSingle",
+        "validate_manifest:validateManifest",
+        "create_session:createSession",
+        "session_add_image:sessionAddImage",
+        "session_encode_ico:sessionEncodeIco",
+        "session_encode_icns:sessionEncodeIcns",
+        "destroy_session:destroySession",
+        "get_all_platforms:getAllPlatforms",
+        "get_required_sizes:getRequiredSizes",
+        "get_catalog_json:getCatalogJson",
+        "wasm_generate_webmanifest:generateWebmanifest",
+        "wasm_generate_adaptive_xml:generateAdaptiveXml",
+        "wasm_generate_bg_color_xml:generateBgColorXml",
+      ],
+      "format": "esm",
+    },
+    "wasm-gc": {
+      "exports": [
+        "encode_ico_single:encodeIcoSingle",
+        "encode_icns_single:encodeIcnsSingle",
+        "validate_manifest:validateManifest",
+        "create_session:createSession",
+        "session_add_image:sessionAddImage",
+        "session_encode_ico:sessionEncodeIco",
+        "session_encode_icns:sessionEncodeIcns",
+        "destroy_session:destroySession",
+        "get_all_platforms:getAllPlatforms",
+        "get_required_sizes:getRequiredSizes",
+        "get_catalog_json:getCatalogJson",
+        "wasm_generate_webmanifest:generateWebmanifest",
+        "wasm_generate_adaptive_xml:generateAdaptiveXml",
+        "wasm_generate_bg_color_xml:generateBgColorXml",
+      ],
+      "use-js-builtin-string": true,
+    },
+  },
 )

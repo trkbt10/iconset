@@ -1,0 +1,33 @@
+{
+  "name": "@trkbt10/iconset-wasm",
+  "version": "0.1.0",
+  "description": "Icon set generator for all platforms (Windows, macOS, iOS, Android, Ubuntu, Web, PWA), compiled from MoonBit",
+  "type": "module",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "iconset.js",
+    "iconset.js.map",
+    "moonbit.d.ts"
+  ],
+  "keywords": [
+    "iconset",
+    "icon",
+    "favicon",
+    "ico",
+    "icns",
+    "pwa",
+    "moonbit"
+  ],
+  "author": "trkbt10",
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "build": "cd .. && bash scripts/build-js.sh",
+    "test": "cd .. && node scripts/smoke-test-js.mjs"
+  }
+}

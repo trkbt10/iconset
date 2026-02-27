@@ -57,6 +57,7 @@ pub(all) struct ContainerSpec {
 }
 pub impl Eq for ContainerSpec
 pub impl Show for ContainerSpec
+pub impl ToJson for ContainerSpec
 
 pub(all) struct IconEntry {
   pixel_size : Int
@@ -65,6 +66,7 @@ pub(all) struct IconEntry {
 }
 pub impl Eq for IconEntry
 pub impl Show for IconEntry
+pub impl ToJson for IconEntry
 
 pub(all) enum Platform {
   Windows
@@ -88,6 +90,7 @@ pub(all) struct PlatformCatalog {
   icons : Array[IconEntry]
 }
 pub impl Show for PlatformCatalog
+pub impl ToJson for PlatformCatalog
 
 // Type aliases
 

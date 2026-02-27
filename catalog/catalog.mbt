@@ -16,7 +16,7 @@ pub(all) struct IconEntry {
   pixel_size : Int
   filename : String
   directory : String
-} derive(Eq, Show)
+} derive(Eq, Show, ToJson)
 
 ///|
 /// A container file (ICO/ICNS) specification.
@@ -25,7 +25,7 @@ pub(all) struct ContainerSpec {
   filename : String
   directory : String
   sizes : Array[Int]
-} derive(Eq, Show)
+} derive(Eq, Show, ToJson)
 
 ///|
 /// Platform-specific icon catalog: what icons to generate for a platform.
@@ -34,7 +34,7 @@ pub(all) struct PlatformCatalog {
   description : String
   containers : Array[ContainerSpec]
   icons : Array[IconEntry]
-} derive(Show)
+} derive(Show, ToJson)
 
 ///|
 /// A generated catalog output with platform and path info.

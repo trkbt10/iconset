@@ -6,11 +6,33 @@ import {
 }
 
 // Values
+pub fn create_session() -> Int
+
+pub fn destroy_session(Int) -> Unit
+
 pub fn encode_icns_single(Int, Int, Bytes) -> Bytes raise @types.IconsetError
 
 pub fn encode_ico_single(Int, Int, Bytes) -> Bytes raise @types.IconsetError
 
+pub fn get_all_platforms() -> String
+
+pub fn get_catalog_json(String) -> String raise @types.IconsetError
+
+pub fn get_required_sizes(String) -> String raise @types.IconsetError
+
+pub fn session_add_image(Int, Int, Bytes) -> Unit
+
+pub fn session_encode_icns(Int, String) -> Bytes raise @types.IconsetError
+
+pub fn session_encode_ico(Int, String) -> Bytes raise @types.IconsetError
+
 pub fn validate_manifest(String) -> String raise @types.IconsetError
+
+pub fn wasm_generate_adaptive_xml(Bool, Bool) -> String
+
+pub fn wasm_generate_bg_color_xml(String) -> String
+
+pub fn wasm_generate_webmanifest(String, String) -> String
 
 // Errors
 
