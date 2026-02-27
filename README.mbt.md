@@ -2,6 +2,8 @@
 
 A cross-platform icon set generator written in [MoonBit](https://www.moonbitlang.com/). Generate all the icons your app needs — ICO, ICNS, PNGs, adaptive icons, web manifests — from a single source PNG.
 
+**[Try it in your browser](https://trkbt10.github.io/iconset/)** — no install required.
+
 ## Supported Platforms
 
 | Platform | Outputs |
@@ -13,6 +15,10 @@ A cross-platform icon set generator written in [MoonBit](https://www.moonbitlang
 | **Ubuntu** | `hicolor/` theme PNGs (16–512px) |
 | **Web** | `favicon.ico`, `favicon-*.png`, `apple-touch-icon.png`, `android-chrome-*.png` |
 | **PWA** | Standard + maskable icon PNGs (48–512px), `site.webmanifest` |
+
+## Demo
+
+The [online demo](https://trkbt10.github.io/iconset/) runs entirely in your browser using the compiled MoonBit → JS module. Upload a PNG, select platforms, and download a ZIP of all generated icons.
 
 ## Usage
 
@@ -243,6 +249,7 @@ iconset/
     generate/             Config-driven CLI entry point
     wasm/                 WASM/JS bridge (14 exported functions)
   npm/                    npm package (@trkbt10/iconset-wasm)
+  docs/                   GitHub Pages demo (browser-based generator)
   scripts/                Build and smoke test scripts
 ```
 
