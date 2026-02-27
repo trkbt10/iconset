@@ -1,0 +1,54 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "trkbt10/iconset/config"
+
+import {
+  "moonbitlang/core/json",
+  "trkbt10/iconset/catalog",
+  "trkbt10/iconset/types",
+}
+
+// Values
+pub fn parse_config(String) -> IconsetConfig raise @types.IconsetError
+
+pub fn resolve_platforms(Array[String]) -> Array[@catalog.Platform] raise @types.IconsetError
+
+pub fn resolve_resize_method(String?) -> ResizeMethod
+
+// Errors
+
+// Types and methods
+pub(all) struct AndroidConfig {
+  adaptive : Bool
+  foreground : String
+  background_color : String?
+  background_image : String?
+  monochrome : String?
+}
+pub impl Show for AndroidConfig
+pub impl ToJson for AndroidConfig
+pub impl @json.FromJson for AndroidConfig
+
+pub(all) struct IconsetConfig {
+  name : String
+  source : String
+  output : String
+  platforms : Array[String]
+  resize_method : String?
+  android : AndroidConfig?
+}
+pub impl Show for IconsetConfig
+pub impl ToJson for IconsetConfig
+pub impl @json.FromJson for IconsetConfig
+
+pub(all) enum ResizeMethod {
+  Nearest
+  Bilinear
+  Bicubic
+}
+pub impl Eq for ResizeMethod
+pub impl Show for ResizeMethod
+
+// Type aliases
+
+// Traits
+

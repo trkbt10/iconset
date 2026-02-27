@@ -89,8 +89,8 @@ test "required_sizes_for multiple platforms" {
 }
 
 ///|
-test "all_platforms returns 5 platforms" {
-  assert_eq(@catalog.all_platforms().length(), 5)
+test "all_platforms returns 7 platforms" {
+  assert_eq(@catalog.all_platforms().length(), 7)
 }
 
 ///|
@@ -153,4 +153,161 @@ test "generate_catalog missing size raises error" {
   let images : Map[Int, Bytes] = {}
   let result = try? @catalog.generate_catalog("App", [@catalog.Windows], images)
   assert_true(result is Err(_))
+}
+
+///|
+test "catalog_for Web" {
+  let cat = @catalog.catalog_for(@catalog.Web)
+  assert_eq(cat.platform, @catalog.Web)
+  assert_eq(cat.containers.length(), 1) // favicon.ico
+  assert_eq(cat.containers[0].format, @types.Ico)
+  assert_eq(cat.icons.length(), 5)
+}
+
+///|
+test "required_sizes Web" {
+  let cat = @catalog.catalog_for(@catalog.Web)
+  let sizes = @catalog.required_sizes(cat)
+  inspect(sizes, content="[16, 32, 48, 180, 192, 512]")
+}
+
+///|
+test "catalog_for PWA" {
+  let cat = @catalog.catalog_for(@catalog.PWA)
+  assert_eq(cat.platform, @catalog.PWA)
+  assert_eq(cat.containers.length(), 0)
+  assert_eq(cat.icons.length(), 11) // 9 standard + 2 maskable
+}
+
+///|
+test "required_sizes PWA" {
+  let cat = @catalog.catalog_for(@catalog.PWA)
+  let sizes = @catalog.required_sizes(cat)
+  inspect(sizes, content="[48, 72, 96, 128, 144, 152, 192, 384, 512]")
+}
+
+///|
+test "generate_catalog Web" {
+  let images : Map[Int, Bytes] = {
+    16: Bytes::from_array([0x01]),
+    32: Bytes::from_array([0x02]),
+    48: Bytes::from_array([0x03]),
+    180: Bytes::from_array([0x04]),
+    192: Bytes::from_array([0x05]),
+    512: Bytes::from_array([0x06]),
+  }
+  let outputs = @catalog.generate_catalog("MyApp", [@catalog.Web], images)
+  // 1 ICO + 5 PNG = 6
+  assert_eq(outputs.length(), 6)
+  assert_eq(outputs[0].filename, "favicon.ico")
+  assert_eq(outputs[1].filename, "favicon-16x16.png")
+  assert_eq(outputs[3].filename, "apple-touch-icon.png")
+}
+
+///|
+test "generate_catalog PWA includes webmanifest" {
+  let images : Map[Int, Bytes] = {
+    48: Bytes::from_array([0x01]),
+    72: Bytes::from_array([0x02]),
+    96: Bytes::from_array([0x03]),
+    128: Bytes::from_array([0x04]),
+    144: Bytes::from_array([0x05]),
+    152: Bytes::from_array([0x06]),
+    192: Bytes::from_array([0x07]),
+    384: Bytes::from_array([0x08]),
+    512: Bytes::from_array([0x09]),
+  }
+  let outputs = @catalog.generate_catalog("TestApp", [@catalog.PWA], images)
+  // 11 PNGs + 1 site.webmanifest = 12
+  assert_eq(outputs.length(), 12)
+  let last = outputs[outputs.length() - 1]
+  assert_eq(last.filename, "site.webmanifest")
+}
+
+///|
+test "generate_webmanifest contains name and icons" {
+  let manifest = @catalog.generate_webmanifest("MyApp", "icons")
+  assert_true(manifest.contains("\"name\": \"MyApp\""))
+  assert_true(manifest.contains("icon-192x192.png"))
+  assert_true(manifest.contains("maskable-512x512.png"))
+  assert_true(manifest.contains("\"purpose\": \"any\""))
+  assert_true(manifest.contains("\"purpose\": \"maskable\""))
+}
+
+///|
+test "Platform JSON round-trip" {
+  let platforms : Array[@catalog.Platform] = [
+    @catalog.Windows,
+    @catalog.MacOS,
+    @catalog.Web,
+    @catalog.PWA,
+  ]
+  for p in platforms {
+    let json = p.to_json()
+    let parsed : @catalog.Platform = @json.from_json(json)
+    assert_eq(p, parsed)
+  }
+}
+
+///|
+test "generate_adaptive_xml with color background" {
+  let xml = @catalog.generate_adaptive_xml(true, true)
+  assert_true(xml.contains("@color/ic_launcher_background"))
+  assert_true(xml.contains("@drawable/ic_launcher_foreground"))
+  assert_true(xml.contains("@drawable/ic_launcher_monochrome"))
+}
+
+///|
+test "generate_adaptive_xml without monochrome" {
+  let xml = @catalog.generate_adaptive_xml(false, false)
+  assert_true(xml.contains("@drawable/ic_launcher_background"))
+  assert_true(xml.contains("@drawable/ic_launcher_foreground"))
+  assert_true(not(xml.contains("monochrome")))
+}
+
+///|
+test "generate_background_color_xml" {
+  let xml = @catalog.generate_background_color_xml("#4A90D9")
+  assert_true(xml.contains("#4A90D9"))
+  assert_true(xml.contains("ic_launcher_background"))
+}
+
+///|
+test "generate_catalog Android with adaptive options" {
+  let images : Map[Int, Bytes] = {
+    48: Bytes::from_array([0x01]),
+    72: Bytes::from_array([0x02]),
+    96: Bytes::from_array([0x03]),
+    144: Bytes::from_array([0x04]),
+    192: Bytes::from_array([0x05]),
+    512: Bytes::from_array([0x06]),
+  }
+  let fg : Map[Int, Bytes] = {
+    108: Bytes::from_array([0xA1]),
+    162: Bytes::from_array([0xA2]),
+    216: Bytes::from_array([0xA3]),
+    324: Bytes::from_array([0xA4]),
+    432: Bytes::from_array([0xA5]),
+  }
+  let opts : @catalog.AndroidOptions = {
+    foreground: fg,
+    background: @catalog.Color("#FFFFFF"),
+    monochrome: None,
+  }
+  let outputs = @catalog.generate_catalog(
+    "MyApp",
+    [@catalog.Android],
+    images,
+    android_options=Some(opts),
+  )
+  // 6 legacy + 5 foreground + 1 bg color xml + 5 round + 2 xml = 19
+  assert_eq(outputs.length(), 19)
+  // Check that adaptive XML is present
+  let mut found_xml = false
+  for output in outputs {
+    if output.filename == "ic_launcher.xml" {
+      found_xml = true
+    }
+  }
+  assert_true(found_xml)
 }

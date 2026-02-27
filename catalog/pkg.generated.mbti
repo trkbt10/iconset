@@ -2,15 +2,24 @@
 package "trkbt10/iconset/catalog"
 
 import {
+  "moonbitlang/core/json",
   "trkbt10/iconset/types",
 }
 
 // Values
+pub let adaptive_icon_sizes : Array[Int]
+
 pub fn all_platforms() -> Array[Platform]
 
 pub fn catalog_for(Platform) -> PlatformCatalog
 
-pub fn generate_catalog(String, Array[Platform], Map[Int, Bytes]) -> Array[CatalogOutput] raise @types.IconsetError
+pub fn generate_adaptive_xml(Bool, Bool) -> String
+
+pub fn generate_background_color_xml(String) -> String
+
+pub fn generate_catalog(String, Array[Platform], Map[Int, Bytes], android_options? : AndroidOptions?) -> Array[CatalogOutput] raise @types.IconsetError
+
+pub fn generate_webmanifest(String, String) -> String
 
 pub fn required_sizes(PlatformCatalog) -> Array[Int]
 
@@ -19,6 +28,19 @@ pub fn required_sizes_for(Array[Platform]) -> Array[Int]
 // Errors
 
 // Types and methods
+pub(all) enum AndroidBackground {
+  Color(String)
+  Image(Map[Int, Bytes])
+}
+pub impl Show for AndroidBackground
+
+pub(all) struct AndroidOptions {
+  foreground : Map[Int, Bytes]
+  background : AndroidBackground
+  monochrome : Map[Int, Bytes]?
+}
+pub impl Show for AndroidOptions
+
 pub(all) struct CatalogOutput {
   platform : Platform
   directory : String
@@ -50,10 +72,14 @@ pub(all) enum Platform {
   IOS
   Android
   Ubuntu
+  Web
+  PWA
 }
 pub impl Eq for Platform
 pub impl Hash for Platform
 pub impl Show for Platform
+pub impl ToJson for Platform
+pub impl @json.FromJson for Platform
 
 pub(all) struct PlatformCatalog {
   platform : Platform

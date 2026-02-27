@@ -1,0 +1,12 @@
+{
+  "name": "AppIcon",
+  "source": "./icon-check-sheet-masked.png",
+  "output": "./_output",
+  "platforms": ["Windows", "MacOS", "Web", "PWA", "Android", "Ubuntu"],
+  "resize_method": "bilinear",
+  "android": {
+    "adaptive": true,
+    "foreground": "./icon-check-sheet-masked.png",
+    "background_color": "#4A90D9"
+  }
+}

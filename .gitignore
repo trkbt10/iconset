@@ -1,4 +1,7 @@
 .DS_Store
 _build/
+_output/
 .mooncakes/
 .moonagent/
+node_modules/
+*.wasm

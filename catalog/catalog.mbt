@@ -6,6 +6,8 @@ pub(all) enum Platform {
   IOS
   Android
   Ubuntu
+  Web
+  PWA
 } derive(Eq, Show, Hash)
 
 ///|
@@ -52,6 +54,8 @@ pub fn catalog_for(platform : Platform) -> PlatformCatalog {
     IOS => ios_catalog()
     Android => android_catalog()
     Ubuntu => ubuntu_catalog()
+    Web => web_catalog()
+    PWA => pwa_catalog()
   }
 }
 
@@ -100,5 +104,37 @@ pub fn required_sizes_for(platforms : Array[Platform]) -> Array[Int] {
 ///|
 /// All supported platforms.
 pub fn all_platforms() -> Array[Platform] {
-  [Windows, MacOS, IOS, Android, Ubuntu]
+  [Windows, MacOS, IOS, Android, Ubuntu, Web, PWA]
+}
+
+///|
+pub impl ToJson for Platform with to_json(self) {
+  match self {
+    Windows => Json::string("Windows")
+    MacOS => Json::string("MacOS")
+    IOS => Json::string("IOS")
+    Android => Json::string("Android")
+    Ubuntu => Json::string("Ubuntu")
+    Web => Json::string("Web")
+    PWA => Json::string("PWA")
+  }
+}
+
+///|
+pub impl @json.FromJson for Platform with from_json(json, path) {
+  guard json is String(s) else {
+    raise @json.JsonDecodeError(
+      (path, "Platform: expected string, got \{json}"),
+    )
+  }
+  match s {
+    "Windows" => Windows
+    "MacOS" | "macOS" => MacOS
+    "IOS" | "iOS" => IOS
+    "Android" => Android
+    "Ubuntu" | "Linux" => Ubuntu
+    "Web" => Web
+    "PWA" => PWA
+    _ => raise @json.JsonDecodeError((path, "Unknown platform: \{s}"))
+  }
 }

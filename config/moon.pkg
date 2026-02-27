@@ -1,6 +1,5 @@
 import {
   "moonbitlang/core/json",
   "trkbt10/iconset/types",
-  "trkbt10/iconset/ico",
-  "trkbt10/iconset/icns",
+  "trkbt10/iconset/catalog",
 }

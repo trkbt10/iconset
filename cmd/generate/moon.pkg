@@ -1,0 +1,11 @@
+import {
+  "moonbitlang/x/fs",
+  "mizchi/image",
+  "trkbt10/iconset/types",
+  "trkbt10/iconset/catalog",
+  "trkbt10/iconset/config",
+}
+
+options(
+  "is-main": true,
+)
