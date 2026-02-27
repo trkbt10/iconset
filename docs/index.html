@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Iconset Generator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#09090b;--surface:#141416;--surface-2:#1e1e22;
+  --border:#27272a;--border-2:#3f3f46;
+  --text:#fafafa;--text-2:#a1a1aa;--text-3:#71717a;
+  --accent:#f97316;--accent-hover:#fb923c;--accent-dim:rgba(249,115,22,.08);
+  --success:#22c55e;--error:#ef4444;
+  --r:12px;--r-sm:8px;
+  --font:'Outfit',system-ui,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+}
+html{font-size:16px}
+body{
+  font-family:var(--font);color:var(--text);background:var(--bg);
+  min-height:100vh;line-height:1.5;
+  background-image:
+    radial-gradient(ellipse at 25% -10%,rgba(249,115,22,.06) 0%,transparent 55%),
+    radial-gradient(ellipse at 75% 110%,rgba(249,115,22,.03) 0%,transparent 50%);
+}
+
+/* layout */
+.container{max-width:740px;margin:0 auto;padding:40px 20px 80px}
+.card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r);padding:24px;margin-bottom:16px;
+  animation:fadeUp .4s ease both;
+}
+.card:nth-child(2){animation-delay:.05s}
+.card:nth-child(3){animation-delay:.1s}
+.card:nth-child(4){animation-delay:.15s}
+.card:nth-child(5){animation-delay:.2s}
+.card:nth-child(6){animation-delay:.25s}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+/* header */
+.header{text-align:center;padding:48px 0 36px;animation:fadeUp .4s ease both}
+.header h1{
+  font-size:2.8rem;font-weight:800;letter-spacing:.06em;
+  background:linear-gradient(135deg,var(--text) 40%,var(--accent));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.header p{color:var(--text-2);font-size:.95rem;margin-top:4px}
+.header-line{
+  width:48px;height:3px;border-radius:2px;margin:20px auto 0;
+  background:linear-gradient(90deg,var(--accent),transparent);
+}
+
+/* section titles */
+.card h2{font-size:1rem;font-weight:600;margin-bottom:16px;letter-spacing:.02em;color:var(--text-2)}
+
+/* drop zone */
+.drop-zone{
+  border:2px dashed var(--border-2);border-radius:var(--r);
+  padding:48px 24px;text-align:center;cursor:pointer;
+  transition:border-color .2s,background .2s;
+}
+.drop-zone:hover,.drop-zone.drag-over{
+  border-color:var(--accent);background:var(--accent-dim);
+}
+.drop-icon{
+  width:48px;height:48px;margin:0 auto 12px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--surface-2);border:1px solid var(--border);
+  font-size:1.2rem;color:var(--text-2);transition:color .2s,border-color .2s;
+}
+.drop-zone:hover .drop-icon,.drop-zone.drag-over .drop-icon{color:var(--accent);border-color:var(--accent)}
+.drop-zone p{color:var(--text-2);font-size:.9rem}
+.drop-zone .hint{color:var(--text-3);font-size:.8rem;margin-top:4px}
+
+/* preview */
+.preview{
+  display:flex;align-items:center;gap:16px;padding:12px;
+  background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-sm);
+}
+.preview img{
+  width:64px;height:64px;object-fit:contain;border-radius:6px;
+  background:repeating-conic-gradient(#2a2a2e 0% 25%,#1a1a1e 0% 50%) 0 0/16px 16px;
+}
+.preview-info{display:flex;flex-direction:column;gap:2px;flex:1;min-width:0}
+.preview-info .name{font-size:.85rem;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.preview-info .dims{font-family:var(--mono);font-size:.75rem;color:var(--text-3)}
+.preview-info .warning{font-size:.75rem;color:var(--accent)}
+
+/* form controls */
+input[type="text"]{
+  width:100%;padding:10px 14px;background:var(--surface-2);
+  border:1px solid var(--border);border-radius:var(--r-sm);
+  color:var(--text);font-family:var(--font);font-size:.9rem;
+  outline:none;transition:border-color .2s;
+}
+input[type="text"]:focus{border-color:var(--accent)}
+input[type="text"]::placeholder{color:var(--text-3)}
+
+/* buttons */
+.btn-sm{
+  padding:5px 12px;font-size:.75rem;font-weight:500;font-family:var(--font);
+  background:var(--surface-2);color:var(--text-2);border:1px solid var(--border);
+  border-radius:6px;cursor:pointer;transition:all .15s;
+}
+.btn-sm:hover{border-color:var(--border-2);color:var(--text)}
+.btn-accent{color:var(--accent);border-color:rgba(249,115,22,.3)}
+.btn-accent:hover{background:var(--accent-dim);border-color:var(--accent)}
+
+/* platform grid */
+.platform-actions{display:flex;gap:8px;margin-bottom:12px}
+.platform-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}
+.platform-check{
+  display:flex;align-items:center;gap:8px;padding:10px 12px;
+  background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-sm);
+  cursor:pointer;transition:all .15s;user-select:none;
+}
+.platform-check:hover{border-color:var(--border-2)}
+.platform-check.checked{border-color:var(--accent);background:var(--accent-dim)}
+.platform-check input{display:none}
+.check-box{
+  width:16px;height:16px;border-radius:4px;border:1.5px solid var(--border-2);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  transition:all .15s;font-size:10px;color:transparent;
+}
+.platform-check.checked .check-box{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+.platform-label{font-size:.85rem;font-weight:500}
+
+/* android section */
+.toggle-row{
+  display:flex;align-items:center;gap:10px;margin-bottom:16px;
+}
+.toggle-switch{
+  position:relative;width:40px;height:22px;flex-shrink:0;
+}
+.toggle-switch input{display:none}
+.toggle-track{
+  position:absolute;inset:0;background:var(--border-2);border-radius:11px;
+  cursor:pointer;transition:background .2s;
+}
+.toggle-track::after{
+  content:'';position:absolute;left:3px;top:3px;width:16px;height:16px;
+  background:var(--text);border-radius:50%;transition:transform .2s;
+}
+.toggle-switch input:checked+.toggle-track{background:var(--accent)}
+.toggle-switch input:checked+.toggle-track::after{transform:translateX(18px)}
+.toggle-label{font-size:.85rem;color:var(--text-2)}
+.option-group{margin-top:16px}
+.option-group>label{display:block;font-size:.8rem;font-weight:500;color:var(--text-3);margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em}
+.option-group select{
+  width:100%;padding:8px 12px;background:var(--surface-2);color:var(--text);
+  border:1px solid var(--border);border-radius:var(--r-sm);font-family:var(--font);
+  font-size:.85rem;outline:none;cursor:pointer;
+}
+.option-group select:focus{border-color:var(--accent)}
+.color-row{display:flex;align-items:center;gap:10px;margin-top:8px}
+.color-row input[type="color"]{
+  width:36px;height:36px;border:1px solid var(--border);border-radius:6px;
+  background:none;cursor:pointer;padding:2px;
+}
+.color-hex{font-family:var(--mono);font-size:.8rem;color:var(--text-2)}
+.fg-preview,.bg-preview{
+  display:flex;align-items:center;gap:10px;margin-top:8px;
+  padding:8px;background:var(--surface);border:1px solid var(--border);border-radius:6px;
+}
+.fg-preview img,.bg-preview img{width:40px;height:40px;border-radius:4px;object-fit:contain}
+.fg-preview span,.bg-preview span{font-size:.8rem;color:var(--text-2)}
+
+/* generate */
+.btn-generate{
+  width:100%;padding:14px;font-family:var(--font);font-size:1rem;font-weight:700;
+  background:var(--accent);color:var(--bg);border:none;border-radius:10px;
+  cursor:pointer;transition:all .2s;letter-spacing:.02em;
+}
+.btn-generate:hover:not(:disabled){background:var(--accent-hover);box-shadow:0 0 32px rgba(249,115,22,.25)}
+.btn-generate:disabled{opacity:.4;cursor:not-allowed}
+.btn-generate:active:not(:disabled){transform:scale(.99)}
+.progress-wrap{margin-top:16px}
+.progress-bar{
+  height:6px;background:var(--surface-2);border-radius:3px;overflow:hidden;
+}
+.progress-fill{
+  height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent-hover));
+  border-radius:3px;transition:width .15s ease;
+}
+.progress-text{font-size:.8rem;color:var(--text-3);margin-top:8px;text-align:center}
+.error-msg{
+  margin-top:12px;padding:10px 14px;background:rgba(239,68,68,.1);
+  border:1px solid rgba(239,68,68,.3);border-radius:var(--r-sm);
+  font-size:.85rem;color:#fca5a5;
+}
+
+/* output */
+.output-stats{
+  font-family:var(--mono);font-size:.8rem;color:var(--text-3);
+  margin-bottom:16px;display:flex;gap:20px;
+}
+.output-stats span{color:var(--accent)}
+.file-tree{
+  font-family:var(--mono);font-size:.78rem;line-height:1.7;
+  background:var(--bg);border:1px solid var(--border);border-radius:var(--r-sm);
+  padding:16px;max-height:400px;overflow-y:auto;margin-bottom:16px;
+}
+.file-tree::-webkit-scrollbar{width:6px}
+.file-tree::-webkit-scrollbar-track{background:transparent}
+.file-tree::-webkit-scrollbar-thumb{background:var(--border-2);border-radius:3px}
+.tree-dir{color:var(--accent);font-weight:500}
+.tree-file{color:var(--text-2)}
+.tree-item{white-space:nowrap}
+.btn-download{
+  width:100%;padding:12px;font-family:var(--font);font-size:.9rem;font-weight:600;
+  background:transparent;color:var(--success);
+  border:1.5px solid rgba(34,197,94,.4);border-radius:10px;
+  cursor:pointer;transition:all .2s;
+}
+.btn-download:hover{background:rgba(34,197,94,.08);border-color:var(--success)}
+
+[hidden]{display:none!important}
+
+/* responsive */
+@media(max-width:500px){
+  .container{padding:20px 12px 60px}
+  .header h1{font-size:2rem}
+  .card{padding:16px}
+  .platform-grid{grid-template-columns:repeat(auto-fill,minmax(110px,1fr))}
+  .drop-zone{padding:32px 16px}
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <header class="header">
+    <h1>ICONSET</h1>
+    <p>Generate platform icons entirely in your browser</p>
+    <div class="header-line"></div>
+  </header>
+
+  <!-- Source Image -->
+  <section class="card">
+    <h2>Source Image</h2>
+    <div class="drop-zone" id="drop-zone">
+      <div class="drop-icon">&#8593;</div>
+      <p>Drop a PNG here or click to browse</p>
+      <p class="hint">Square PNG recommended, 512x512 or larger</p>
+      <input type="file" id="source-input" accept="image/png,image/jpeg,image/webp" hidden>
+    </div>
+    <div class="preview" id="preview" hidden>
+      <img id="preview-img" alt="Source preview">
+      <div class="preview-info">
+        <span class="name" id="preview-name"></span>
+        <span class="dims" id="preview-dims"></span>
+        <span class="warning" id="preview-warn" hidden></span>
+      </div>
+      <button class="btn-sm" id="clear-source">Change</button>
+    </div>
+  </section>
+
+  <!-- App Name -->
+  <section class="card">
+    <h2>App Name</h2>
+    <input type="text" id="app-name" value="MyApp" placeholder="MyApp" spellcheck="false">
+  </section>
+
+  <!-- Platforms -->
+  <section class="card">
+    <h2>Platforms</h2>
+    <div class="platform-actions">
+      <button class="btn-sm btn-accent" id="select-all">Select All</button>
+      <button class="btn-sm" id="select-none">Deselect All</button>
+    </div>
+    <div class="platform-grid" id="platform-grid"></div>
+  </section>
+
+  <!-- Android Adaptive Options -->
+  <section class="card" id="android-section" hidden>
+    <h2>Android Adaptive Icons</h2>
+    <div class="toggle-row">
+      <label class="toggle-switch">
+        <input type="checkbox" id="adaptive-toggle" checked>
+        <span class="toggle-track"></span>
+      </label>
+      <span class="toggle-label">Enable adaptive icons (API 26+)</span>
+    </div>
+    <div id="adaptive-options">
+      <div class="option-group">
+        <label>Foreground</label>
+        <select id="fg-source">
+          <option value="main">Same as source image</option>
+          <option value="custom">Custom image</option>
+        </select>
+        <div id="fg-upload-wrap" hidden>
+          <input type="file" id="fg-input" accept="image/png" style="margin-top:8px;font-size:.8rem;color:var(--text-2)">
+          <div class="fg-preview" id="fg-preview" hidden>
+            <img id="fg-preview-img" alt="Foreground preview">
+            <span id="fg-preview-name"></span>
+          </div>
+        </div>
+      </div>
+      <div class="option-group">
+        <label>Background</label>
+        <select id="bg-mode">
+          <option value="color">Solid color</option>
+          <option value="image">Custom image</option>
+        </select>
+        <div class="color-row" id="bg-color-wrap">
+          <input type="color" id="bg-color" value="#FFFFFF">
+          <span class="color-hex" id="bg-color-hex">#FFFFFF</span>
+        </div>
+        <div id="bg-upload-wrap" hidden>
+          <input type="file" id="bg-input" accept="image/png" style="margin-top:8px;font-size:.8rem;color:var(--text-2)">
+          <div class="bg-preview" id="bg-preview" hidden>
+            <img id="bg-preview-img" alt="Background preview">
+            <span id="bg-preview-name"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Generate -->
+  <section class="card" id="gen-section">
+    <button class="btn-generate" id="generate-btn" disabled>Generate Icons</button>
+    <div class="progress-wrap" id="progress-wrap" hidden>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+      <p class="progress-text" id="progress-text"></p>
+    </div>
+    <div class="error-msg" id="error-msg" hidden></div>
+  </section>
+
+  <!-- Output -->
+  <section class="card" id="output-section" hidden>
+    <h2>Output</h2>
+    <div class="output-stats" id="output-stats"></div>
+    <div class="file-tree" id="file-tree"></div>
+    <button class="btn-download" id="download-btn">Download ZIP</button>
+  </section>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+<script type="module">
+import {
+  createIconSession,
+  getAllPlatforms,
+  getRequiredSizes,
+  getCatalogJson,
+  generateWebmanifest,
+  generateAdaptiveXml,
+  generateBgColorXml,
+} from "./iconset-lib.js";
+
+// ── Constants ──────────────────────────────────────────────────────────
+const PLATFORM_DISPLAY = {
+  Windows:"Windows", MacOS:"macOS", IOS:"iOS",
+  Android:"Android", Ubuntu:"Ubuntu", Web:"Web", PWA:"PWA",
+};
+const ADAPTIVE_SIZES = [108, 162, 216, 324, 432];
+const DENSITY_SPECS = [
+  { dir:"mipmap-mdpi",    adaptive:108, legacy:48  },
+  { dir:"mipmap-hdpi",    adaptive:162, legacy:72  },
+  { dir:"mipmap-xhdpi",   adaptive:216, legacy:96  },
+  { dir:"mipmap-xxhdpi",  adaptive:324, legacy:144 },
+  { dir:"mipmap-xxxhdpi", adaptive:432, legacy:192 },
+];
+
+// ── State ──────────────────────────────────────────────────────────────
+let sourceImg = null;
+let customFgImg = null;
+let bgImg = null;
+let lastZipBlob = null;
+let lastZipName = "";
+
+// ── DOM refs ───────────────────────────────────────────────────────────
+const $ = (s) => document.querySelector(s);
+const dropZone     = $("#drop-zone");
+const sourceInput  = $("#source-input");
+const previewEl    = $("#preview");
+const previewImg   = $("#preview-img");
+const previewName  = $("#preview-name");
+const previewDims  = $("#preview-dims");
+const previewWarn  = $("#preview-warn");
+const clearBtn     = $("#clear-source");
+const appNameInput = $("#app-name");
+const platformGrid = $("#platform-grid");
+const selectAllBtn = $("#select-all");
+const selectNone   = $("#select-none");
+const androidSec   = $("#android-section");
+const adaptiveToggle = $("#adaptive-toggle");
+const adaptiveOpts = $("#adaptive-options");
+const fgSourceSel  = $("#fg-source");
+const fgUploadWrap = $("#fg-upload-wrap");
+const fgInput      = $("#fg-input");
+const fgPreview    = $("#fg-preview");
+const fgPreviewImg = $("#fg-preview-img");
+const fgPreviewName= $("#fg-preview-name");
+const bgModeSel    = $("#bg-mode");
+const bgColorWrap  = $("#bg-color-wrap");
+const bgColorInput = $("#bg-color");
+const bgColorHex   = $("#bg-color-hex");
+const bgUploadWrap = $("#bg-upload-wrap");
+const bgInput      = $("#bg-input");
+const bgPreview    = $("#bg-preview");
+const bgPreviewImg = $("#bg-preview-img");
+const bgPreviewName= $("#bg-preview-name");
+const genBtn       = $("#generate-btn");
+const progressWrap = $("#progress-wrap");
+const progressFill = $("#progress-fill");
+const progressText = $("#progress-text");
+const errorMsg     = $("#error-msg");
+const outputSec    = $("#output-section");
+const outputStats  = $("#output-stats");
+const fileTree     = $("#file-tree");
+const downloadBtn  = $("#download-btn");
+
+// ── Image loading ──────────────────────────────────────────────────────
+function loadImage(src) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = () => reject(new Error("Failed to load image"));
+    img.src = src;
+  });
+}
+
+function loadFile(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(new Error("Failed to read file"));
+    reader.readAsDataURL(file);
+  });
+}
+
+async function loadImageFile(file) {
+  const dataUrl = await loadFile(file);
+  return loadImage(dataUrl);
+}
+
+// ── Canvas resizing ────────────────────────────────────────────────────
+async function resizeImage(img, targetSize) {
+  let src = img;
+  let w = img.naturalWidth || img.width;
+  let h = img.naturalHeight || img.height;
+  while (w / 2 > targetSize) {
+    const c = document.createElement("canvas");
+    w = Math.floor(w / 2);
+    h = Math.floor(h / 2);
+    c.width = w; c.height = h;
+    const ctx = c.getContext("2d");
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = "high";
+    ctx.drawImage(src, 0, 0, w, h);
+    src = c;
+  }
+  const final = document.createElement("canvas");
+  final.width = targetSize; final.height = targetSize;
+  const ctx = final.getContext("2d");
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = "high";
+  ctx.drawImage(src, 0, 0, targetSize, targetSize);
+  const blob = await new Promise(r => final.toBlob(r, "image/png"));
+  return new Uint8Array(await blob.arrayBuffer());
+}
+
+// ── Name application (mirrors catalog/generate.mbt) ────────────────────
+function applyContainerName(filename, name, format) {
+  if (!name) return filename;
+  if (filename.startsWith("app.")) return name + "." + format;
+  return filename;
+}
+
+function applyName(filename, name) {
+  if (!name) return filename;
+  if (filename === "app.png") return name + ".png";
+  return filename;
+}
+
+function getFormat(fmt) {
+  if (typeof fmt === "string") return fmt.toLowerCase();
+  if (typeof fmt === "number") return ["ico","icns","png"][fmt] || "unknown";
+  if (fmt && typeof fmt === "object" && "$tag" in fmt) {
+    const t = fmt.$tag;
+    if (typeof t === "number") return ["ico","icns","png"][t] || "unknown";
+    return String(t).toLowerCase();
+  }
+  return String(fmt).toLowerCase();
+}
+
+// ── Platform UI ────────────────────────────────────────────────────────
+let platforms = [];
+
+function initPlatforms() {
+  try { platforms = getAllPlatforms(); } catch { platforms = ["Windows","MacOS","IOS","Android","Ubuntu","Web","PWA"]; }
+  platformGrid.innerHTML = "";
+  for (const p of platforms) {
+    const label = document.createElement("label");
+    label.className = "platform-check";
+    label.innerHTML = `<input type="checkbox" value="${p}"><div class="check-box">&#10003;</div><span class="platform-label">${PLATFORM_DISPLAY[p] || p}</span>`;
+    const cb = label.querySelector("input");
+    cb.addEventListener("change", () => {
+      label.classList.toggle("checked", cb.checked);
+      onPlatformChange();
+    });
+    platformGrid.appendChild(label);
+  }
+}
+
+function getSelectedPlatforms() {
+  return [...platformGrid.querySelectorAll("input:checked")].map(c => c.value);
+}
+
+function setAllPlatforms(checked) {
+  platformGrid.querySelectorAll("input").forEach(cb => {
+    cb.checked = checked;
+    cb.closest(".platform-check").classList.toggle("checked", checked);
+  });
+  onPlatformChange();
+}
+
+function onPlatformChange() {
+  const sel = getSelectedPlatforms();
+  androidSec.hidden = !sel.includes("Android");
+  updateGenButton();
+}
+
+function updateGenButton() {
+  genBtn.disabled = !sourceImg || getSelectedPlatforms().length === 0;
+}
+
+// ── Android options ────────────────────────────────────────────────────
+adaptiveToggle.addEventListener("change", () => {
+  adaptiveOpts.hidden = !adaptiveToggle.checked;
+});
+fgSourceSel.addEventListener("change", () => {
+  fgUploadWrap.hidden = fgSourceSel.value !== "custom";
+});
+bgModeSel.addEventListener("change", () => {
+  bgColorWrap.hidden = bgModeSel.value !== "color";
+  bgUploadWrap.hidden = bgModeSel.value !== "image";
+});
+bgColorInput.addEventListener("input", () => {
+  bgColorHex.textContent = bgColorInput.value.toUpperCase();
+});
+
+fgInput.addEventListener("change", async () => {
+  if (!fgInput.files[0]) return;
+  try {
+    customFgImg = await loadImageFile(fgInput.files[0]);
+    fgPreviewImg.src = customFgImg.src;
+    fgPreviewName.textContent = `${customFgImg.naturalWidth}x${customFgImg.naturalHeight}`;
+    fgPreview.hidden = false;
+  } catch { fgPreview.hidden = true; }
+});
+
+bgInput.addEventListener("change", async () => {
+  if (!bgInput.files[0]) return;
+  try {
+    bgImg = await loadImageFile(bgInput.files[0]);
+    bgPreviewImg.src = bgImg.src;
+    bgPreviewName.textContent = `${bgImg.naturalWidth}x${bgImg.naturalHeight}`;
+    bgPreview.hidden = false;
+  } catch { bgPreview.hidden = true; }
+});
+
+// ── Source image handling ──────────────────────────────────────────────
+async function setSourceImage(file) {
+  try {
+    sourceImg = await loadImageFile(file);
+    previewImg.src = sourceImg.src;
+    previewName.textContent = file.name;
+    previewDims.textContent = `${sourceImg.naturalWidth} x ${sourceImg.naturalHeight}`;
+    if (sourceImg.naturalWidth < 512 || sourceImg.naturalHeight < 512) {
+      previewWarn.textContent = "Image smaller than 512px — larger sizes may look blurry";
+      previewWarn.hidden = false;
+    } else {
+      previewWarn.hidden = true;
+    }
+    dropZone.hidden = true;
+    previewEl.hidden = false;
+    updateGenButton();
+  } catch (e) {
+    showError("Failed to load image: " + e.message);
+  }
+}
+
+dropZone.addEventListener("click", () => sourceInput.click());
+sourceInput.addEventListener("change", () => {
+  if (sourceInput.files[0]) setSourceImage(sourceInput.files[0]);
+});
+dropZone.addEventListener("dragover", (e) => { e.preventDefault(); dropZone.classList.add("drag-over"); });
+dropZone.addEventListener("dragleave", () => dropZone.classList.remove("drag-over"));
+dropZone.addEventListener("drop", (e) => {
+  e.preventDefault();
+  dropZone.classList.remove("drag-over");
+  const file = e.dataTransfer.files[0];
+  if (file) setSourceImage(file);
+});
+clearBtn.addEventListener("click", () => {
+  sourceImg = null;
+  sourceInput.value = "";
+  dropZone.hidden = false;
+  previewEl.hidden = true;
+  updateGenButton();
+});
+
+// ── Progress / errors ──────────────────────────────────────────────────
+let totalSteps = 0, currentStep = 0;
+function startProgress(total) {
+  totalSteps = total; currentStep = 0;
+  progressFill.style.width = "0%";
+  progressText.textContent = "Starting...";
+  progressWrap.hidden = false;
+  errorMsg.hidden = true;
+}
+function stepProgress(msg) {
+  currentStep++;
+  const pct = Math.min(100, Math.round((currentStep / totalSteps) * 100));
+  progressFill.style.width = pct + "%";
+  progressText.textContent = msg;
+}
+function finishProgress() {
+  progressFill.style.width = "100%";
+  progressText.textContent = "Done!";
+}
+function showError(msg) {
+  errorMsg.textContent = msg;
+  errorMsg.hidden = false;
+}
+
+// ── File tree rendering ────────────────────────────────────────────────
+function renderFileTree(paths) {
+  const root = {};
+  for (const p of paths.sort()) {
+    const parts = p.split("/");
+    let node = root;
+    for (const part of parts) {
+      if (!node[part]) node[part] = {};
+      node = node[part];
+    }
+  }
+  fileTree.innerHTML = buildTreeHTML(root, 0);
+}
+
+function buildTreeHTML(node, depth) {
+  let html = "";
+  const entries = Object.entries(node).sort(([a, av], [b, bv]) => {
+    const aDir = Object.keys(av).length > 0;
+    const bDir = Object.keys(bv).length > 0;
+    if (aDir !== bDir) return aDir ? -1 : 1;
+    return a.localeCompare(b);
+  });
+  for (const [name, children] of entries) {
+    const isDir = Object.keys(children).length > 0;
+    const pad = depth * 20;
+    if (isDir) {
+      html += `<div class="tree-item tree-dir" style="padding-left:${pad}px">\u25B8 ${name}/</div>`;
+      html += buildTreeHTML(children, depth + 1);
+    } else {
+      html += `<div class="tree-item tree-file" style="padding-left:${pad}px">\u00A0\u00A0${name}</div>`;
+    }
+  }
+  return html;
+}
+
+// ── Download ───────────────────────────────────────────────────────────
+function downloadBlob(blob, filename) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 5000);
+}
+
+downloadBtn.addEventListener("click", () => {
+  if (lastZipBlob) downloadBlob(lastZipBlob, lastZipName);
+});
+
+// ── Generation ─────────────────────────────────────────────────────────
+genBtn.addEventListener("click", generate);
+
+async function generate() {
+  const selectedPlatforms = getSelectedPlatforms();
+  const name = appNameInput.value.trim() || "MyApp";
+  const useAdaptive = selectedPlatforms.includes("Android") && adaptiveToggle.checked;
+  const bgIsColor = bgModeSel.value === "color";
+
+  // Validate
+  if (!sourceImg) { showError("Please upload a source image."); return; }
+  if (selectedPlatforms.length === 0) { showError("Please select at least one platform."); return; }
+  if (useAdaptive && !bgIsColor && !bgImg) { showError("Please upload a background image for adaptive icons."); return; }
+  if (useAdaptive && fgSourceSel.value === "custom" && !customFgImg) { showError("Please upload a custom foreground image."); return; }
+
+  genBtn.disabled = true;
+  outputSec.hidden = true;
+  errorMsg.hidden = true;
+
+  try {
+    // 1. Compute all required sizes
+    let sizes = getRequiredSizes(selectedPlatforms);
+    if (useAdaptive) {
+      for (const s of ADAPTIVE_SIZES) {
+        if (!sizes.includes(s)) sizes.push(s);
+      }
+    }
+    sizes.sort((a, b) => a - b);
+
+    // Count steps for progress
+    let steps = sizes.length; // resizing
+    for (const p of selectedPlatforms) {
+      const cat = getCatalogJson(p);
+      steps += cat.containers.length + cat.icons.length;
+    }
+    if (useAdaptive) steps += ADAPTIVE_SIZES.length + DENSITY_SPECS.length + 3;
+    steps += 1; // zip generation
+    startProgress(steps);
+
+    // 2. Resize source to all needed sizes
+    const resized = new Map();
+    for (const size of sizes) {
+      stepProgress(`Resizing to ${size}x${size}...`);
+      resized.set(size, await resizeImage(sourceImg, size));
+    }
+
+    // 3. Adaptive foreground/background images
+    let fgImages = null, bgImages = null;
+    if (useAdaptive) {
+      const fgSrc = (fgSourceSel.value === "custom" && customFgImg) ? customFgImg : sourceImg;
+      fgImages = new Map();
+      for (const s of ADAPTIVE_SIZES) {
+        stepProgress(`Resizing foreground to ${s}x${s}...`);
+        fgImages.set(s, await resizeImage(fgSrc, s));
+      }
+      if (!bgIsColor && bgImg) {
+        bgImages = new Map();
+        for (const s of ADAPTIVE_SIZES) {
+          // counted in the general adaptive steps
+          bgImages.set(s, await resizeImage(bgImg, s));
+        }
+      }
+    }
+
+    // 4. Build ZIP
+    const zip = new JSZip();
+    const allPaths = [];
+
+    for (const platform of selectedPlatforms) {
+      const catalog = getCatalogJson(platform);
+      const dir = platform.toLowerCase();
+
+      // Containers (ICO / ICNS)
+      for (const container of catalog.containers) {
+        const fmt = getFormat(container.format);
+        stepProgress(`Encoding ${container.filename}...`);
+        const session = createIconSession();
+        try {
+          for (const size of container.sizes) {
+            const png = resized.get(size);
+            if (png) session.addImage(size, png);
+          }
+          let data;
+          if (fmt === "ico") data = session.encodeIco(container.sizes);
+          else if (fmt === "icns") data = session.encodeIcns(container.sizes);
+          else continue;
+          const filename = applyContainerName(container.filename, name, fmt);
+          const subdir = container.directory;
+          const path = subdir ? `${dir}/${subdir}/${filename}` : `${dir}/${filename}`;
+          zip.file(path, data);
+          allPaths.push(path);
+        } finally {
+          session.destroy();
+        }
+      }
+
+      // Individual PNGs
+      for (const icon of catalog.icons) {
+        stepProgress(`Adding ${icon.filename} (${icon.pixel_size}px)...`);
+        const png = resized.get(icon.pixel_size);
+        if (!png) continue;
+        const filename = applyName(icon.filename, name);
+        const subdir = icon.directory;
+        const path = subdir ? `${dir}/${subdir}/${filename}` : `${dir}/${filename}`;
+        zip.file(path, png);
+        allPaths.push(path);
+      }
+
+      // PWA: site.webmanifest
+      if (platform === "PWA") {
+        const manifest = generateWebmanifest(name, "icons");
+        const path = `${dir}/site.webmanifest`;
+        zip.file(path, manifest);
+        allPaths.push(path);
+      }
+
+      // Android: adaptive icons
+      if (platform === "Android" && useAdaptive) {
+        // Foreground layers
+        for (const d of DENSITY_SPECS) {
+          const fg = fgImages.get(d.adaptive);
+          if (fg) {
+            const path = `${dir}/${d.dir}/ic_launcher_foreground.png`;
+            zip.file(path, fg);
+            allPaths.push(path);
+          }
+        }
+
+        // Background layers
+        if (bgIsColor) {
+          stepProgress("Generating background color XML...");
+          const bgXml = generateBgColorXml(bgColorInput.value.toUpperCase());
+          const path = `${dir}/values/ic_launcher_background.xml`;
+          zip.file(path, bgXml);
+          allPaths.push(path);
+        } else if (bgImages) {
+          for (const d of DENSITY_SPECS) {
+            const bg = bgImages.get(d.adaptive);
+            if (bg) {
+              const path = `${dir}/${d.dir}/ic_launcher_background.png`;
+              zip.file(path, bg);
+              allPaths.push(path);
+            }
+          }
+        }
+
+        // Round legacy fallback
+        for (const d of DENSITY_SPECS) {
+          stepProgress(`Adding round icon (${d.dir})...`);
+          const png = resized.get(d.legacy);
+          if (png) {
+            const path = `${dir}/${d.dir}/ic_launcher_round.png`;
+            zip.file(path, png);
+            allPaths.push(path);
+          }
+        }
+
+        // Adaptive XML files
+        stepProgress("Generating adaptive icon XML...");
+        const xml = generateAdaptiveXml(bgIsColor, false);
+        for (const fn of ["ic_launcher.xml", "ic_launcher_round.xml"]) {
+          const path = `${dir}/mipmap-anydpi-v26/${fn}`;
+          zip.file(path, xml);
+          allPaths.push(path);
+        }
+      }
+    }
+
+    // 5. Generate ZIP blob
+    stepProgress("Packaging ZIP...");
+    lastZipBlob = await zip.generateAsync({ type: "blob" });
+    lastZipName = `${name}-icons.zip`;
+    finishProgress();
+
+    // 6. Show output
+    const totalSize = (lastZipBlob.size / 1024).toFixed(1);
+    outputStats.innerHTML = `<span>${allPaths.length}</span> files &middot; <span>${totalSize} KB</span> ZIP`;
+    renderFileTree(allPaths);
+    outputSec.hidden = false;
+    outputSec.scrollIntoView({ behavior: "smooth", block: "nearest" });
+
+  } catch (e) {
+    showError("Generation failed: " + e.message);
+    console.error(e);
+  } finally {
+    genBtn.disabled = false;
+  }
+}
+
+// ── Init ───────────────────────────────────────────────────────────────
+selectAllBtn.addEventListener("click", () => setAllPlatforms(true));
+selectNone.addEventListener("click", () => setAllPlatforms(false));
+appNameInput.addEventListener("input", updateGenButton);
+
+initPlatforms();
+updateGenButton();
+</script>
+</body>
+</html>
