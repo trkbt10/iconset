@@ -1,0 +1,26 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "trkbt10/iconset/icns"
+
+import {
+  "trkbt10/iconset/types",
+}
+
+// Values
+pub fn encode(Array[@types.SizedImage]) -> Bytes raise @types.IconsetError
+
+pub fn encode_full(Array[@types.SizedImage]) -> Bytes raise @types.IconsetError
+
+// Errors
+
+// Types and methods
+pub(all) struct IcnsType {
+  code : Bytes
+  pixel_size : Int
+  description : String
+}
+pub impl Show for IcnsType
+
+// Type aliases
+
+// Traits
+

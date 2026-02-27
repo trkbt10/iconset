@@ -1,0 +1,5 @@
+import {
+  "trkbt10/iconset/types",
+  "trkbt10/iconset/ico",
+  "trkbt10/iconset/icns",
+}

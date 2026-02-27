@@ -1,0 +1,22 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "trkbt10/iconset/cmd/wasm"
+
+import {
+  "trkbt10/iconset/types",
+}
+
+// Values
+pub fn encode_icns_single(Int, Int, Bytes) -> Bytes raise @types.IconsetError
+
+pub fn encode_ico_single(Int, Int, Bytes) -> Bytes raise @types.IconsetError
+
+pub fn validate_manifest(String) -> String raise @types.IconsetError
+
+// Errors
+
+// Types and methods
+
+// Type aliases
+
+// Traits
+

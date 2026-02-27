@@ -1,0 +1,67 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "trkbt10/iconset/types"
+
+import {
+  "moonbitlang/core/json",
+}
+
+// Values
+
+// Errors
+pub(all) suberror IconsetError {
+  InvalidManifest(String)
+  InvalidImageSize(Int, Int)
+  EmptySizeList
+  UnsupportedFormat(String)
+  EncodingError(String)
+}
+pub impl Show for IconsetError
+
+// Types and methods
+pub(all) struct GeneratedOutput {
+  format : OutputFormat
+  filename : String
+  data : Bytes
+}
+pub impl Show for GeneratedOutput
+
+pub(all) struct Manifest {
+  name : String
+  outputs : Array[OutputSpec]
+}
+pub impl Eq for Manifest
+pub impl Show for Manifest
+pub impl ToJson for Manifest
+pub impl @json.FromJson for Manifest
+
+pub(all) enum OutputFormat {
+  Png
+  Ico
+  Icns
+}
+pub impl Eq for OutputFormat
+pub impl Hash for OutputFormat
+pub impl Show for OutputFormat
+pub impl ToJson for OutputFormat
+pub impl @json.FromJson for OutputFormat
+
+pub(all) struct OutputSpec {
+  format : OutputFormat
+  sizes : Array[Int]
+}
+pub impl Eq for OutputSpec
+pub impl Show for OutputSpec
+pub impl ToJson for OutputSpec
+pub impl @json.FromJson for OutputSpec
+
+pub(all) struct SizedImage {
+  width : Int
+  height : Int
+  png_data : Bytes
+}
+pub impl Show for SizedImage
+
+// Type aliases
+
+// Traits
+

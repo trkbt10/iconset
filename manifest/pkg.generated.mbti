@@ -1,0 +1,22 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "trkbt10/iconset/manifest"
+
+import {
+  "trkbt10/iconset/types",
+}
+
+// Values
+pub fn collect_sizes(@types.Manifest) -> Array[Int]
+
+pub fn parse(String) -> @types.Manifest raise @types.IconsetError
+
+pub fn validate(@types.Manifest) -> Unit raise @types.IconsetError
+
+// Errors
+
+// Types and methods
+
+// Type aliases
+
+// Traits
+

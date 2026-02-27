@@ -1,0 +1,7 @@
+import {
+  "trkbt10/iconset/catalog",
+}
+
+options(
+  "is-main": true,
+)

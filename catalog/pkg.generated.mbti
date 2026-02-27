@@ -1,0 +1,69 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "trkbt10/iconset/catalog"
+
+import {
+  "trkbt10/iconset/types",
+}
+
+// Values
+pub fn all_platforms() -> Array[Platform]
+
+pub fn catalog_for(Platform) -> PlatformCatalog
+
+pub fn generate_catalog(String, Array[Platform], Map[Int, Bytes]) -> Array[CatalogOutput] raise @types.IconsetError
+
+pub fn required_sizes(PlatformCatalog) -> Array[Int]
+
+pub fn required_sizes_for(Array[Platform]) -> Array[Int]
+
+// Errors
+
+// Types and methods
+pub(all) struct CatalogOutput {
+  platform : Platform
+  directory : String
+  filename : String
+  data : Bytes
+}
+pub impl Show for CatalogOutput
+
+pub(all) struct ContainerSpec {
+  format : @types.OutputFormat
+  filename : String
+  directory : String
+  sizes : Array[Int]
+}
+pub impl Eq for ContainerSpec
+pub impl Show for ContainerSpec
+
+pub(all) struct IconEntry {
+  pixel_size : Int
+  filename : String
+  directory : String
+}
+pub impl Eq for IconEntry
+pub impl Show for IconEntry
+
+pub(all) enum Platform {
+  Windows
+  MacOS
+  IOS
+  Android
+  Ubuntu
+}
+pub impl Eq for Platform
+pub impl Hash for Platform
+pub impl Show for Platform
+
+pub(all) struct PlatformCatalog {
+  platform : Platform
+  description : String
+  containers : Array[ContainerSpec]
+  icons : Array[IconEntry]
+}
+pub impl Show for PlatformCatalog
+
+// Type aliases
+
+// Traits
+

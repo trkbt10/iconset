@@ -1,0 +1,18 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "trkbt10/iconset/ico"
+
+import {
+  "trkbt10/iconset/types",
+}
+
+// Values
+pub fn encode(Array[@types.SizedImage]) -> Bytes raise @types.IconsetError
+
+// Errors
+
+// Types and methods
+
+// Type aliases
+
+// Traits
+
