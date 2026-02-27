@@ -6,11 +6,34 @@ import {
 }
 
 // Values
+pub fn build(IcoContext) -> Bytes raise @types.IconsetError
+
 pub fn encode(Array[@types.SizedImage]) -> Bytes raise @types.IconsetError
+
+pub fn parse(Bytes) -> IcoContext raise @types.IconsetError
 
 // Errors
 
 // Types and methods
+pub(all) struct IcoContext {
+  entries : Array[IcoEntry]
+}
+pub fn IcoContext::add_png(Self, Int, Int, Bytes) -> Unit
+pub fn IcoContext::find(Self, Int) -> IcoEntry?
+pub fn IcoContext::new() -> Self
+pub fn IcoContext::remove_size(Self, Int) -> Unit
+pub fn IcoContext::sizes(Self) -> Array[Int]
+pub impl Show for IcoContext
+
+pub(all) struct IcoEntry {
+  width : Int
+  height : Int
+  color_count : Int
+  planes : Int
+  bpp : Int
+  data : Bytes
+}
+pub impl Show for IcoEntry
 
 // Type aliases
 

@@ -6,13 +6,41 @@ import {
 }
 
 // Values
+pub fn build(IcnsContext) -> Bytes raise @types.IconsetError
+
 pub fn encode(Array[@types.SizedImage]) -> Bytes raise @types.IconsetError
 
 pub fn encode_full(Array[@types.SizedImage]) -> Bytes raise @types.IconsetError
 
+pub fn parse(Bytes) -> IcnsContext raise @types.IconsetError
+
+pub fn resolve_type(Bytes) -> IcnsType?
+
+pub let retina_types : Array[IcnsType]
+
+pub let standard_types : Array[IcnsType]
+
 // Errors
 
 // Types and methods
+pub(all) struct IcnsContext {
+  entries : Array[IcnsEntry]
+}
+pub fn IcnsContext::add(Self, Bytes, Bytes) -> Unit
+pub fn IcnsContext::add_png(Self, Int, Bytes) -> Unit raise @types.IconsetError
+pub fn IcnsContext::add_png_full(Self, Int, Bytes) -> Unit
+pub fn IcnsContext::find(Self, Bytes) -> IcnsEntry?
+pub fn IcnsContext::new() -> Self
+pub fn IcnsContext::remove_type(Self, Bytes) -> Unit
+pub fn IcnsContext::type_codes(Self) -> Array[Bytes]
+pub impl Show for IcnsContext
+
+pub(all) struct IcnsEntry {
+  type_code : Bytes
+  data : Bytes
+}
+pub impl Show for IcnsEntry
+
 pub(all) struct IcnsType {
   code : Bytes
   pixel_size : Int
